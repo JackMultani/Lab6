@@ -7,21 +7,21 @@
 <!-- FAKE VALUES HAVE BEEN INCLUDED, just for reference, you will need to replace
      the attribute values and element content with data -->
 <article>
-  <img src="https://link-to-article.com/recipe-thumbnail.jpg"
-    alt="Recipe Title">
+  <img
+    src="https://link-to-article.com/recipe-thumbnail.jpg"
+    alt="Recipe Title"
+  />
   <p class="title">
     <a href="https://link-to-article.com">Title</a>
   </p>
   <p class="organization">The Chef's Organization</p>
   <div class="rating">
     <span>5</span>
-    <img src="/assets/images/icons/5-star.svg" alt="5 stars">
+    <img src="/assets/images/icons/5-star.svg" alt="5 stars" />
     <span>(500)</span>
   </div>
   <time>50 min</time>
-  <p class="ingredients">
-    Comma, Separated, List, of, Ingredients
-  </p>
+  <p class="ingredients">Comma, Separated, List, of, Ingredients</p>
 </article>
 
 <!-- Styles -->
@@ -58,14 +58,14 @@
     display: flex;
   }
 
-  div.rating>img {
+  div.rating > img {
     height: auto;
     display: inline-block;
     object-fit: scale-down;
     width: 78px;
   }
 
-  article>img {
+  article > img {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     height: 118px;
@@ -98,7 +98,7 @@
   p:not(.title),
   span,
   time {
-    color: #70757A;
+    color: #70757a;
     font-size: 12px;
   }
 </style>
