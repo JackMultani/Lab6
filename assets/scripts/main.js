@@ -21,9 +21,15 @@ function init() {
  * @returns {Array<Object>} An array of recipes found in localStorage
  */
 function getRecipesFromStorage() {
-  // A9. TODO - Complete the functionality as described in this function
-  //           header. It is possible in only a single line, but should
-  //           be no more than a few lines.
+  // A9. Complete the functionality as described in this function
+  //     header. It is possible in only a single line, but should
+  //     be no more than a few lines.
+  if (localStorage.length == 0) {
+    return [];
+  } 
+  let data = localStorage.getItem("recipes");
+  JSON.parse(data);
+  return data;
 }
 
 /**
@@ -34,11 +40,31 @@ function getRecipesFromStorage() {
  * @param {Array<Object>} recipes An array of recipes
  */
 function addRecipesToDocument(recipes) {
-  // A10. TODO - Get a reference to the <main> element
-  // A11. TODO - Loop through each of the recipes in the passed in array,
+  // A10. Get a reference to the <main> element
+  let main = document.querySelector("main");
+  // A11. Loop through each of the recipes in the passed in array,
   //            create a <recipe-card> element for each one, and populate
   //            each <recipe-card> with that recipe data using element.data = ...
   //            Append each element to <main>
+  if(recipes != "") {
+    recipes = JSON.parse(recipes);
+  } 
+  for(let i = 0; i < recipes.length; i++) {
+    let props = recipes[i];
+    let element = document.createElement("recipe-card");
+    element.data = {
+      imgSrc: props.imgSrc,
+      imgAlt: props.imgAlt,
+      titleLnk: props.titleLnk,
+      titleTxt: props.titleTxt,
+      organization: props.organization,
+      rating: props.rating,
+      numRatings: props.numRatings,
+      lengthTime: props.lengthTime,
+      ingredients: props.ingredients
+    }
+    main.append(element);
+  }
 }
 
 /**
@@ -48,9 +74,10 @@ function addRecipesToDocument(recipes) {
  */
 function saveRecipesToStorage(recipes) {
   // EXPLORE - START (All explore numbers start with B)
-  // B1. TODO - Complete the functionality as described in this function
+  // B1. Complete the functionality as described in this function
   //            header. It is possible in only a single line, but should
   //            be no more than a few lines.
+  localStorage.setItem("recipes", JSON.stringify(recipes));
 }
 
 /**
@@ -59,27 +86,62 @@ function saveRecipesToStorage(recipes) {
  */
 function initFormHandler() {
 
-  // B2. TODO - Get a reference to the <form> element
-  
-  // B3. TODO - Add an event listener for the 'submit' event, which fires when the
+  // B2. Get a reference to the <form> element
+  const form = document.querySelector("form");
+  const button = document.querySelector("button");
+  const main = document.querySelector("main");
+  // B3. Add an event listener for the 'submit' event, which fires when the
   //            submit button is clicked
-
   // Steps B4-B9 will occur inside the event listener from step B3
-  // B4. TODO - Create a new FormData object from the <form> element reference above
-  // B5. TODO - Create an empty object (I'll refer to this object as recipeObject to
-  //            make this easier to read), and then extract the keys and corresponding
-  //            values from the FormData object and insert them into recipeObject
-  // B6. TODO - Create a new <recipe-card> element
-  // B7. TODO - Add the recipeObject data to <recipe-card> using element.data
-  // B8. TODO - Append this new <recipe-card> to <main>
-  // B9. TODO - Get the recipes array from localStorage, add this new recipe to it, and
-  //            then save the recipes array back to localStorage
-
-  // B10. TODO - Get a reference to the "Clear Local Storage" button
-  // B11. TODO - Add a click event listener to clear local storage button
-  
-  // Steps B12 & B13 will occur inside the event listener from step B11
-  // B12. TODO - Clear the local storage
-  // B13. TODO - Delete the contents of <main>
+  button.addEventListener('click', (event) => {
+      // B4. Create a new FormData object from the <form> element reference above
+      const formInfo = new FormData(form);
+      // B5. Create an empty object (I'll refer to this object as recipeObject to
+      //            make this easier to read), and then extract the keys and corresponding
+      //            values from the FormData object and insert them into recipeObject
+      let recipeObject = {};
+      for(const entry of formInfo.entries()) {
+        if(entry[0] == 'rating' || entry[0] == 'numRatings') {
+          entry[1] = parseInt(entry[1]);
+        }
+        recipeObject[entry[0]] = entry[1];
+      }
+      // B6. Create a new <recipe-card> element
+      let element = document.createElement("recipe-card");
+      // B7. Add the recipeObject data to <recipe-card> using element.data
+      element.data = {
+        imgSrc: recipeObject.imgSrc,
+        imgAlt: recipeObject.imgAlt,
+        titleLnk: recipeObject.titleLnk,
+        titleTxt: recipeObject.titleTxt,
+        organization: recipeObject.organization,
+        rating: recipeObject.rating,
+        numRatings: recipeObject.numRatings,
+        lengthTime: recipeObject.lengthTime,
+        ingredients: recipeObject.ingredients
+      }
+      // B8. Append this new <recipe-card> to <main>
+      main.append(element);
+      // B9. Get the recipes array from localStorage, add this new recipe to it, and
+      //            then save the recipes array back to localStorage
+      let data = [];
+      if(localStorage.length == 0) {
+        data = [];
+      }
+      else {
+        data = JSON.parse(localStorage.getItem("recipes"));
+      }
+      data.push(recipeObject);
+      localStorage.setItem("recipes", JSON.stringify(data));
+  });
+  // B10. Get a reference to the "Clear Local Storage" button
+  const clear = (document.getElementsByClassName("danger"))[0];
+  // B11. Add a click event listener to clear local storage button
+  clear.addEventListener('click', (event) => {
+    // B12. Clear the local storage
+    localStorage.clear();
+    // B13. Delete the contents of <main>
+    main.innerHTML = ``;
+});
 
 }
